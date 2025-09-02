@@ -33,7 +33,8 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 
 ## 2. Diseño y Planificación
 
-Si aplicara
+Como aplicación para este sistema se pretende utilizar el LoRa iGate para el seguimiento en competiciones deportivas como por ejemplo carreras o ciclismo. Cada corredor, ciclista o atleta lleva un pequeño tracker LoRa APRS. En diferentes puntos estratégicos de la competencia se colocan iGates. Cada iGate recibe la señal LoRa y la reenvía automáticamente a la red APRS-IS a través de Internet. Los datos recopilados se pueden visualizar en plataformas como aprs.fi, o integrarse en un mapa personalizado del evento.
+
 ### Diagrama de Bloques Inicial
 ### Máquina de Estados Inicial
 
