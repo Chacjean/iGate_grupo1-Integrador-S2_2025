@@ -91,6 +91,58 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 
 ## 5. Avance de Código de Programación
 
+## Programación
+
+Para programar la tarjeta como un **iGate LoRa APRS**, es necesario:
+
+### Requisitos de software
+- **Arduino IDE** (o PlatformIO en VSCode).  
+- **Librerías necesarias**:
+  - [RadioHead](http://www.airspayce.com/mikem/arduino/RadioHead/) → Manejo del módulo LoRa.  
+  - [APRS-IS Client](https://github.com) → Comunicación con servidores APRS-IS.  
+  - [TinyGPS++](https://github.com/mikalhart/TinyGPSPlus) → Lectura del GPS.  
+  - WiFi (incluida en ESP32) → Conexión a Internet para subir datos a APRS-IS.  
+
+### Ejemplo básico de iGate
+El siguiente código es un **ejemplo mínimo** de cómo se estructura un iGate LoRa APRS en ESP32:
+
+```cpp
+#include <RadioHead.h>
+#include <WiFi.h>
+#include <TinyGPS++.h>
+
+// Credenciales WiFi
+const char* ssid = "TU_WIFI";
+const char* password = "TU_PASSWORD";
+
+// Configuración LoRa
+#define LORA_SS 18
+#define LORA_RST 14
+#define LORA_DIO0 26
+
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(ssid, password);
+
+  // Esperar conexión WiFi
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("WiFi conectado!");
+
+  // Inicializar LoRa (ejemplo simplificado)
+  if (!LoRa.begin(868E6)) {   // Cambiar a 915E6 según tu región
+    Serial.println("Error al iniciar LoRa");
+    while (1);
+  }
+  Serial.println("LoRa inicializado");
+}
+
+void loop() {
+  // Aquí se reciben paquetes LoRa y se reenvían a APRS-IS
+}
+```
 
 ## 6. Cronograma Preliminar
 
