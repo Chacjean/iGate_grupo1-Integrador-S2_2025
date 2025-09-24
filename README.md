@@ -40,7 +40,7 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 **Figura 1:** Diagrama de referencia de los buses del LilyGO T3 LoRa32. Muestra las conexiones principales de la placa con los periféricos y fuentes de alimentación.
 
 <p align="center">
-  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="600">
+  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="500">
 </p>
 
 **Figura 2:** Diagrama de conexiones simplificado realizado por el grupo. Detalla los elementos clave:
@@ -52,12 +52,37 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 
 > 💡 Nota: Todas estas conexiones son internas en la placa LilyGO T3 LoRa32, excepto la antena y la batería, que se conectan externamente. La correcta conexión garantiza que el iGate pueda recibir paquetes LoRa, mostrarlos en el OLED y enviarlos a APRS-IS.
 
-## 3. Diseño y Planificación
+## 3. Diseño y Aplicación
 
 Como aplicación para este sistema se pretende utilizar el LoRa iGate para el seguimiento en competiciones deportivas como por ejemplo carreras o ciclismo. Cada corredor, ciclista o atleta lleva un pequeño tracker LoRa APRS. En diferentes puntos estratégicos de la competencia se colocan iGates. Cada iGate recibe la señal LoRa y la reenvía automáticamente a la red APRS-IS a través de Internet. Los datos recopilados se pueden visualizar en plataformas como aprs.fi, o integrarse en un mapa personalizado del evento.
 
-### Diagrama de Bloques Inicial
-### Máquina de Estados Inicial
+El iGate se configurará mediante programación directa en la placa LilyGO T3 LoRa32, siguiendo un flujo planificado que garantice la recepción y transmisión correcta de los datos. La implementación se realizará en varias etapas:
+
+1. **Inicialización de Hardware y Firmware:**  
+   - Configuración del microcontrolador ESP32 y del módulo LoRa SX1276.  
+   - Inicialización de la pantalla OLED para mostrar información de estado.  
+   - Verificación de la conexión a la fuente de alimentación (USB o batería Li-Po).
+
+2. **Conexión a Internet:**  
+   - Establecer conexión WiFi para poder enviar los paquetes recibidos hacia APRS-IS.  
+   - Implementar control de errores para reconectar automáticamente en caso de caída de la red.
+
+3. **Recepción de Paquetes LoRa:**  
+   - Escuchar de forma continua la frecuencia de 433 MHz para recibir paquetes de trackers.  
+   - Validar que los paquetes tengan el formato correcto de APRS-LoRa.
+
+4. **Procesamiento y Registro de Datos:**  
+   - Guardar los datos en un log local para seguimiento y depuración.  
+   - Mostrar información resumida en la pantalla OLED (por ejemplo, número de paquetes recibidos, estado de conexión WiFi).
+
+5. **Transmisión a APRS-IS:**  
+   - Reenviar automáticamente los paquetes validados a la red APRS-IS.  
+   - Implementar reintentos en caso de fallos de envío.
+
+6. **Ciclo Continuo de Operación:**  
+   - Repetir de manera indefinida los pasos anteriores, garantizando la disponibilidad del iGate como puente entre los trackers LoRa y la red de Internet.  
+
+> 💡 Nota: Este enfoque asegura un **control total del sistema**, sin depender de aplicaciones externas de configuración. Cada etapa está planificada para facilitar depuración, escalabilidad y mantenimiento del iGate.
 
 ## 4. Lista de Hardware a utilizar
 
