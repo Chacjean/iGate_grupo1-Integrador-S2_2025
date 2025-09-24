@@ -36,16 +36,21 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 <p align="center">
   <img src="Archivos/Imagenes/ConexionesHardware.jpg" alt="Diagrama general de buses" width="800">
 </p>
-<p align="center">
-  Figura 1: Diagrama de buses del LilyGO T3 LoRa32 (tomado de referencia)
-</p>
+
+**Figura 1:** Diagrama de referencia de los buses del LilyGO T3 LoRa32. Muestra las conexiones principales de la placa con los periféricos y fuentes de alimentación.
 
 <p align="center">
-  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="800">
+  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="600">
 </p>
-<p align="center">
-  Figura 2: Diagrama de conexiones simple
-</p>
+
+**Figura 2:** Diagrama de conexiones simplificado realizado por el grupo. Detalla los elementos clave:
+
+- **USB-C → PC:** Permite programar la placa y proveer alimentación mientras está conectada al computador.  
+- **Antena LoRa → SX1276:** El módulo **SX1276** es el transceptor LoRa integrado en la placa. Se encarga de **transmitir y recibir paquetes de datos** en la frecuencia LoRa (433 MHz en nuestro caso). La antena se conecta a este módulo para mejorar la cobertura y la calidad de la señal.  
+- **OLED → I2C:** La pantalla OLED de 0.96” se comunica mediante **I2C**, mostrando información del iGate, como el número de paquetes recibidos o estado de conexión.  
+- **Batería → JST:** Conector para una batería Li-Po 3.7V que permite que el iGate funcione sin necesidad de estar conectado al USB.  
+
+> 💡 Nota: Todas estas conexiones son internas en la placa LilyGO T3 LoRa32, excepto la antena y la batería, que se conectan externamente. La correcta conexión garantiza que el iGate pueda recibir paquetes LoRa, mostrarlos en el OLED y enviarlos a APRS-IS.
 
 ## 3. Diseño y Planificación
 
