@@ -34,14 +34,14 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 ### 2.1 Conexiones de Hardware
 
 <p align="center">
-  <img src="Archivos/Imagenes/ConexionesHardware.jpg" alt="Diagrama general de buses" width="250">
+  <img src="Archivos/Imagenes/ConexionesHardware.jpg" alt="Diagrama general de buses" width="800">
 </p>
 <p align="center">
   Figura 1: Diagrama de buses del LilyGO T3 LoRa32 (tomado de referencia)
 </p>
 
 <p align="center">
-  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="250">
+  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="800">
 </p>
 <p align="center">
   Figura 2: Diagrama de conexiones simple
