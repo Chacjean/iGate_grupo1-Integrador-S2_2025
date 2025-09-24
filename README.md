@@ -89,13 +89,16 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 -Conectar la tarjeta al PC vía USB
 -Build (compilar) --- Upload --- Upload Filesystem Image
 
-###4.1 Diagrama de Bloques
-![Diagrama de Bloques](Archivos/Imagenes/DiagramadeBloques.png)
-El diagrama de bloques muestra el flujo de datos desde el Tracker LoRa hacia el iGate y la red APRS-IS.
+### 4.1 Diagrama de Bloques
+<p align="center">
+  <img src="Archivos/Imagenes/DiagramadeBloques.png" alt="Diagrama de Bloques" width="500">
+</p>
 
 ### 4.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
-![Máquina de Estados](Archivos/Imagenes/DiagramadeEstados.png)
-La máquina de estados describe las etapas internas del firmware del iGate, desde la inicialización hasta el reenvío de paquetes.
+
+<p align="center">
+  <img src="Archivos/Imagenes/DiagramadeEstados.png" alt="Máquina de Estados" width="500">
+</p>
 
 ## 5. Avance de Código de Programación
 
