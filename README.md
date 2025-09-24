@@ -89,6 +89,15 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 -Conectar la tarjeta al PC vía USB
 -Build (compilar) --- Upload --- Upload Filesystem Image
 
+###4.1 Diagrama de Bloques
+![Diagrama de Bloques](Archivos/Imagenes/DiagramadeEstados.png)
+El diagrama de bloques muestra el flujo de datos desde el Tracker LoRa hacia el iGate y la red APRS-IS.
+
+###4.2 Máquina de Estados - Máquina de Estados (firmware interno en LILYGO)
+### 4.2 Máquina de Estados
+![Máquina de Estados](Archivos/Imagenes/DiagramadeFlujo.drawio.png)
+La máquina de estados describe las etapas internas del firmware del iGate, desde la inicialización hasta el reenvío de paquetes.
+
 ## 5. Avance de Código de Programación
 
 ## Programación
@@ -149,9 +158,9 @@ void loop() {
 | Semana | Actividad / Objetivo | Avance Estimado |
 |--------|--------------------|----------------|
 | 5      | Configuración de entorno de programación y pruebas iniciales con la LilyGO T3. | ⚙️ En progreso |
-| 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ⬜ Pendiente |
+| 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ⚙️ En progreso |
 | 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ⬜ Pendiente |
-| 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ⬜ Pendiente |
+| 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ⚙️ En progreso |
 
 
 
