@@ -91,7 +91,7 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 
 ### 4.1 Diagrama de Bloques
 <p align="center">
-  <img src="Archivos/Imagenes/DiagramadeBloques.png" alt="Diagrama de Bloques" width="500">
+  <img src="Archivos/Imagenes/DiagramadeBloques.png" alt="Diagrama de Bloques" width="250">
 </p>
 
 ### 4.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
