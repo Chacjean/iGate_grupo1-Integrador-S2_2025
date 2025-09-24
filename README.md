@@ -30,15 +30,31 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 
 - **Placa de desarrollo:**  
   Módulo electrónico con un módem LoRa, configurable como iGate o tracker mediante firmware.
+  
+### 2.1 Conexiones de Hardware
 
-## 2. Diseño y Planificación
+<p align="center">
+  <img src="Archivos/Imagenes/ConexionesHardware.jpg" alt="Diagrama general de buses" width="250">
+</p>
+<p align="center">
+  Figura 1: Diagrama de buses del LilyGO T3 LoRa32 (tomado de referencia)
+</p>
+
+<p align="center">
+  <img src="Archivos/Imagenes/MiDiagramaConexiones.png" alt="Diagrama propio de conexiones" width="250">
+</p>
+<p align="center">
+  Figura 2: Diagrama de conexiones simple
+</p>
+
+## 3. Diseño y Planificación
 
 Como aplicación para este sistema se pretende utilizar el LoRa iGate para el seguimiento en competiciones deportivas como por ejemplo carreras o ciclismo. Cada corredor, ciclista o atleta lleva un pequeño tracker LoRa APRS. En diferentes puntos estratégicos de la competencia se colocan iGates. Cada iGate recibe la señal LoRa y la reenvía automáticamente a la red APRS-IS a través de Internet. Los datos recopilados se pueden visualizar en plataformas como aprs.fi, o integrarse en un mapa personalizado del evento.
 
 ### Diagrama de Bloques Inicial
 ### Máquina de Estados Inicial
 
-## 3. Lista de Hardware a utilizar
+## 4. Lista de Hardware a utilizar
 
 - T3 LoRa32 V1.6.1 – LILYGO®
 
@@ -76,7 +92,7 @@ Como aplicación para este sistema se pretende utilizar el LoRa iGate para el se
 | **Dimensiones**      | 25.6 x 51.2 mm aprox. |
 
 
-## 4. Diseño Planteado
+## 5. Diseño Planteado
 
 Paso 1. Descargar e instalar ¨Visual Studio Code¨
 
@@ -89,18 +105,18 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 -Conectar la tarjeta al PC vía USB
 -Build (compilar) --- Upload --- Upload Filesystem Image
 
-### 4.1 Diagrama de Bloques
+### 5.1 Diagrama de Bloques
 <p align="center">
   <img src="Archivos/Imagenes/DiagramadeBloques.png" alt="Diagrama de Bloques" width="250">
 </p>
 
-### 4.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
+### 5.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
 
 <p align="center">
   <img src="Archivos/Imagenes/DiagramadeEstados.png" alt="Máquina de Estados" width="500">
 </p>
 
-## 5. Avance de Código de Programación
+## 6. Avance de Código de Programación
 
 ## Programación
 
@@ -161,7 +177,7 @@ void loop() {
 |--------|--------------------|----------------|
 | 5      | Configuración de entorno de programación y pruebas iniciales con la LilyGO T3. | ⚙️ En progreso |
 | 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ⚙️ En progreso |
-| 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ⬜ Pendiente |
+| 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ⚙️ En progreso |
 | 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ⚙️ En progreso |
 
 
