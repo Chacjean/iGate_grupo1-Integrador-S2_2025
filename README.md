@@ -145,7 +145,7 @@ Paso 3. **Configurar el iGate en VS Code y cargar su placa vía USB:**
 
 ## 6. Avance de Código de Programación
 
-### 6.1 1. Preparación del entorno y programación
+### 6.1 Preparación del entorno y programación
 
 1. Instalar Arduino IDE
 
@@ -196,56 +196,45 @@ https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32
 
 ## Programación
 
-Para programar la tarjeta como un **iGate LoRa APRS**, es necesario:
-
-### Requisitos de software
-- **Arduino IDE** (o PlatformIO en VSCode).  
-- **Librerías necesarias**:
-  - [RadioHead](http://www.airspayce.com/mikem/arduino/RadioHead/) → Manejo del módulo LoRa.  
-  - [APRS-IS Client](https://github.com) → Comunicación con servidores APRS-IS.  
-  - [TinyGPS++](https://github.com/mikalhart/TinyGPSPlus) → Lectura del GPS.  
-  - WiFi (incluida en ESP32) → Conexión a Internet para subir datos a APRS-IS.  
-
-### Ejemplo básico de iGate
-El siguiente código es un **ejemplo mínimo** de cómo se estructura un iGate LoRa APRS en ESP32:
+### 6.2 Probar la recepción de LoRa
+1. Abrir el monitor serial en 115200 bps.
+2. Usar función temporal para ver si la placa “escucha” paquetes LoRa:
 
 ```cpp
-#include <RadioHead.h>
-#include <WiFi.h>
-#include <TinyGPS++.h>
+#include <LoRa.h>
 
-// Credenciales WiFi
-const char* ssid = "TU_WIFI";
-const char* password = "TU_PASSWORD";
-
-// Configuración LoRa
 #define LORA_SS 18
 #define LORA_RST 14
 #define LORA_DIO0 26
 
 void setup() {
   Serial.begin(115200);
-  WiFi.begin(ssid, password);
+  while (!Serial);
 
-  // Esperar conexión WiFi
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("WiFi conectado!");
-
-  // Inicializar LoRa (ejemplo simplificado)
-  if (!LoRa.begin(868E6)) {   // Cambiar a 915E6 según tu región
-    Serial.println("Error al iniciar LoRa");
+  if (!LoRa.begin(433775E3)) {
+    Serial.println("Error inicializando LoRa");
     while (1);
   }
-  Serial.println("LoRa inicializado");
+  Serial.println("LoRa listo para recibir paquetes");
 }
 
 void loop() {
-  // Aquí se reciben paquetes LoRa y se reenvían a APRS-IS
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    Serial.print("Paquete recibido: ");
+    while (LoRa.available()) {
+      Serial.print((char)LoRa.read());
+    }
+    Serial.println();
+  }
 }
 ```
+### 6.3 Conectar a APRS-IS
+Agregar la librería APRS-IS Client → Para enviar paquetes a la red APRS-IS.
+
+Descarga la librería (se obtiene de manera externa y se agrega en Arduino IDE)
+https://github.com/PhilippCh/APRS-IS-Client
+
 
 ## 6. Cronograma Preliminar
 
