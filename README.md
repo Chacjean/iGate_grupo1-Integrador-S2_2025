@@ -1,12 +1,11 @@
-# iGate LoRa/APRS - Proyecto
+# 📡iGate LoRa/APRS - Proyecto
 
 ## 1. Introducción del Proyecto
-
+<details>
 Un iGate (gateway de Internet) en APRS LoRa es una estación base que recibe señales de otros dispositivos LoRa y las transmite a la red de Internet, haciendo la información disponible públicamente a través de la web.  
 
 Los iGates no necesitan GPS porque están en una ubicación fija y son esenciales para expandir el alcance y la utilidad de la red APRS-LoRa. Recopilan datos de rastreo (trackers) y los envían a la plataforma de Internet para su visualización.
-
----
+</details>
 
 ## 2. Conceptos Importantes
 
