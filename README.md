@@ -142,9 +142,9 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 <p align="center">
   <img src="Archivos/Imagenes/DiagramadeEstados.png" alt="Máquina de Estados" width="500">
 </p>
-</details>
+
 ## 6. Avance de Código de Programación
-<details>
+
 ### 6.1 1. Preparación del entorno y programación
 
 1. Instalar Arduino IDE
@@ -248,11 +248,8 @@ void loop() {
   // Aquí se reciben paquetes LoRa y se reenvían a APRS-IS
 }
 ```
-</details>
 
 ## 6. Cronograma Preliminar
-
-<details>
 
 | Semana | Actividad / Objetivo | Avance Estimado |
 |--------|--------------------|----------------|
@@ -261,6 +258,5 @@ void loop() {
 | 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ⚙️ En progreso |
 | 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ⚙️ En progreso |
 
-</details>
 
 
