@@ -126,7 +126,53 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
   <img src="Archivos/Imagenes/DiagramadeBloques.png" alt="Diagrama de Bloques" width="250">
 </p>
 
-### 5.1 Pseudocódigo Inicial
+### 5.1 Pseudocódigo del iGate LoRa/APRS
+
+A continuación se presenta el pseudocódigo del funcionamiento del iGate LoRa/APRS:
+
+```text
+Inicio del programa
+
+// Configuración
+Definir la red WiFi (nombre y contraseña)
+Definir las credenciales de APRS-IS (indicativo y passcode)
+Definir el servidor APRS-IS (dirección y puerto)
+
+// Inicialización (Setup)
+Iniciar la comunicación serial (para depuración)
+Conectar a la red WiFi
+Si la conexión WiFi falla, detener el programa
+
+Configurar e iniciar el módulo LoRa
+Si el módulo LoRa falla, detener el programa
+
+Conectar al servidor APRS-IS
+Si la conexión es exitosa, enviar la línea de login con el indicativo, passcode y versión
+Si la conexión falla, mostrar un mensaje de error
+
+// Bucle principal (Loop)
+Bucle infinito:
+
+  // Función de repetición (iGate)
+  Revisar si hay un paquete de LoRa disponible:
+    Si hay un paquete:
+      Leer el mensaje completo del paquete LoRa
+      Mostrar el mensaje recibido en el monitor serial
+      Si la conexión a APRS-IS está activa:
+        Construir un mensaje de APRS para reenvío (tu indicativo, >APRS, el mensaje recibido)
+        Enviar el mensaje a APRS-IS
+        Mostrar el mensaje enviado en el monitor serial
+
+  // Función de baliza (Beacon)
+  Comprobar si han pasado 30 segundos desde el último envío de beacon:
+    Si han pasado 30 segundos Y la conexión a APRS-IS está activa:
+      Construir el mensaje de beacon APRS (tu indicativo, ">APRS", ubicación fija y mensaje de prueba)
+      Enviar el mensaje de beacon a APRS-IS
+      Mostrar el mensaje de beacon enviado en el monitor serial
+      Reiniciar el temporizador del beacon
+
+Fin del programa
+```
 
 ### 5.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
 
@@ -378,10 +424,12 @@ Las pruebas preliminares confirman que el iGate recibe y retransmite paquetes Lo
 
 | Semana | Actividad / Objetivo | Avance Estimado |
 |--------|--------------------|----------------|
-| 5      | Configuración de entorno de programación y pruebas iniciales con la LilyGO T3. | ⚙️ En progreso |
-| 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ⚙️ En progreso |
-| 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ⚙️ En progreso |
-| 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ⚙️ En progreso |
+| 5      | Configuración de entorno de programación y pruebas iniciales con la LilyGO T3. | ✅ Completado |
+| 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ✅ Completado |
+| 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ✅ Completado |
+| 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ✅ Completado |
+| 9-15   | Implementación y Evaluación Continua: <br> - Pruebas de recepción y transmisión de trackers <br> - Depuración y refinamiento del código <br> - Commits regulares y documentados en GitHub <br> - Visualización de datos en APRS.fi y aprsdirect.de | ⚙️ En progreso |
+| 16     | Defensa del Proyecto Final: <br> - Entrega de informe completo <br> - Presentación final <br> - Código final documentado y funcional <br> - Confirmación de publicación de datos en APRS | ⏳ Planeado |
 
 
 
