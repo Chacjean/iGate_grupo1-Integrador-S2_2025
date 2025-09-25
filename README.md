@@ -230,11 +230,184 @@ void loop() {
 }
 ```
 ### 6.3 Conectar a APRS-IS
-Agregar la librería APRS-IS Client → Para enviar paquetes a la red APRS-IS.
+1. Agregar la librería APRS-IS Client → Para enviar paquetes a la red APRS-IS.
+- Descarga la librería (se obtiene de manera externa y se agrega en Arduino IDE):
+https://github.com/markqvist/LibAPRS (Code → Download Zip)
+- Abre Arduino IDE: Ve a Programa → Incluir Librería → Añadir .ZIP de librería....Selecciona el archivo ZIP descargado y haz clic en Abrir.
+- Verificar instalación: Ve a Programa → Incluir Librería, y ver LibAPRS en la lista de librerías disponibles.
 
-Descarga la librería (se obtiene de manera externa y se agrega en Arduino IDE)
-https://github.com/PhilippCh/APRS-IS-Client
+```cpp
+#include <WiFi.h>
+#include <LoRa.h>
+#include <APRS_IS.h>  // Librería para enviar a APRS-IS
 
+// --- Configuración WiFi ---
+const char* ssid = "TU_WIFI";
+const char* password = "TU_PASSWORD";
+
+// --- Configuración LoRa ---
+#define LORA_SS 18
+#define LORA_RST 14
+#define LORA_DIO0 26
+#define LORA_FREQ 433775E3
+
+// --- Configuración APRS-IS ---
+const char* callsign = "T00IE1-10";      // Cambiar por tu callsign
+const char* passcode = "12345";          // Código APRS generado online
+const char* server = "euro.aprs2.net";
+const int port = 14580;
+
+APRS_IS aprs(callsign, passcode, server, port);
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+
+  // Conectar a WiFi
+  WiFi.begin(ssid, password);
+  Serial.print("Conectando a WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado!");
+
+  // Inicializar LoRa
+  if (!LoRa.begin(LORA_FREQ)) {
+    Serial.println("Error inicializando LoRa");
+    while (1);
+  }
+  Serial.println("LoRa listo");
+
+  // Conectar a APRS-IS
+  if (aprs.begin()) {
+    Serial.println("Conectado a APRS-IS!");
+  } else {
+    Serial.println("Error al conectar a APRS-IS");
+  }
+}
+
+void loop() {
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    String mensaje = "";
+    while (LoRa.available()) {
+      mensaje += (char)LoRa.read();
+    }
+    Serial.print("Paquete recibido: ");
+    Serial.println(mensaje);
+
+    // Enviar a APRS-IS
+    aprs.sendMicE(mensaje); // O sendPacket si tu librería lo requiere
+    Serial.println("Paquete enviado a APRS-IS");
+  }
+
+  // Mantener conexión WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("WiFi desconectado. Reconectando...");
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) delay(500);
+    Serial.println("WiFi reconectado!");
+  }
+
+  delay(100);
+}
+```
+El código anterior:
+1. Conecta tu LilyGO al WiFi.
+2. Inicializa el módulo LoRa en 433.775 MHz.
+3. Escucha paquetes LoRa y los imprime en el monitor serial.
+4. Reenvía los paquetes recibidos a APRS-IS usando tu callsign.
+5. Mantiene la conexión WiFi viva.
+
+### 6.4 iGate LoRa APRS
+Este código inicializa un iGate LoRa APRS en un ESP32. Se conecta a WiFi, recibe paquetes LoRa y los reenvía a la red APRS-IS. Además, envía un beacon de prueba cada 30 segundos. La comunicación LoRa se hace mediante el módulo SX1276 conectado por SPI, y APRS-IS mediante la librería APRSIS.
+
+```cpp
+#include <SPI.h>        // Comunicación SPI con el módulo LoRa SX1276
+#include <LoRa.h>       // Control del transceptor LoRa
+#include <WiFi.h>       // Conectar el ESP32 a Internet vía WiFi
+#include <APRSIS.h>     // Comunicación con la red APRS-IS
+
+// ---------- CONFIGURACIÓN WiFi ----------
+const char* ssid = "TU_WIFI";         // Nombre de tu red WiFi
+const char* password = "TU_PASSWORD"; // Contraseña de tu WiFi
+
+// ---------- CONFIGURACIÓN LoRa ----------
+#define LORA_SS 18       // Pin CS del módulo LoRa
+#define LORA_RST 14      // Pin RESET del módulo LoRa
+#define LORA_DIO0 26     // Pin DIO0 del módulo LoRa
+#define LORA_FREQUENCY 433775E3 // Frecuencia LoRa 433.775 MHz
+
+// ---------- CONFIGURACIÓN APRS-IS ----------
+const char* callsign = "TU_CALLSIGN";   // Tu indicativo (callsign)
+const char* aprsPasscode = "TU_PASSCODE"; // Passcode generado para tu callsign
+const char* aprsServer = "euro.aprs2.net"; // Servidor APRS-IS
+const int aprsPort = 14580;               // Puerto de conexión APRS-IS
+
+// Inicializamos APRS-IS con los datos anteriores
+APRSIS aprs(callsign, aprsPasscode, aprsServer, aprsPort);
+
+void setup() {
+  Serial.begin(115200);  // Inicializa el puerto serial para debug
+  delay(1000);           
+
+  Serial.println("Iniciando iGate LoRa APRS...");
+
+  // ---------- CONEXIÓN WiFi ----------
+  WiFi.begin(ssid, password);
+  Serial.print("Conectando a WiFi");
+  while (WiFi.status() != WL_CONNECTED) { // Espera hasta que esté conectado
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado!"); // Mensaje cuando se conecta
+
+  // ---------- INICIALIZAR LoRa ----------
+  LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
+  if (!LoRa.begin(LORA_FREQUENCY)) {   // Inicia LoRa en la frecuencia definida
+    Serial.println("Error al iniciar LoRa!");
+    while (1); // Detiene el programa si no se puede iniciar
+  }
+  Serial.println("LoRa inicializado en 433.775 MHz");
+
+  // ---------- CONEXIÓN APRS-IS ----------
+  if (aprs.connect()) {   // Intenta conectar al servidor APRS-IS
+    Serial.println("Conectado a APRS-IS!");
+  } else {
+    Serial.println("Error conectando a APRS-IS");
+  }
+}
+
+void loop() {
+  // ---------------- RECIBIR PAQUETES LoRa ----------------
+  int packetSize = LoRa.parsePacket(); // Verifica si llegó un paquete
+  if (packetSize) {
+    String incoming = "";
+    while (LoRa.available()) {         // Leer todos los bytes del paquete
+      incoming += (char)LoRa.read();
+    }
+    Serial.print("Paquete recibido: ");
+    Serial.println(incoming);
+
+    // Enviar a APRS-IS si estamos conectados
+    if (aprs.connected()) {
+      aprs.sendPosition(incoming); // Envía el texto recibido directamente
+      Serial.println("Paquete reenviado a APRS-IS");
+    }
+  }
+
+  // ---------------- ENVIAR BEACON DE PRUEBA ----------------
+  static unsigned long lastBeacon = 0;
+  if (millis() - lastBeacon > 30000) { // Cada 30 segundos
+    if (aprs.connected()) {
+      aprs.sendPosition("PRUEBA iGate"); // Enviar mensaje de prueba
+      Serial.println("Beacon enviado a APRS-IS");
+    }
+    lastBeacon = millis(); // Actualiza el temporizador
+  }
+}
+```
 
 ## 6. Cronograma Preliminar
 
