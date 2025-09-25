@@ -344,7 +344,7 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
    Al encenderse, el dispositivo mostraba en la pantalla el mensaje **Listening**, indicando que estaba listo para recibir paquetes LoRa.  
 
 <p align="center">
-  <img src="Archivos/Imagenes/Listening.jpeg" alt="LilyGO en modo Listening" width="800">
+  <img src="Archivos/Imagenes/Listening.jpeg" alt="LilyGO en modo Listening" width="600">
 </p>
 
 **Figura 2:** Pantalla del LilyGO mostrando *Listening*, indicando que el iGate está activo y a la espera de paquetes.
@@ -353,7 +353,7 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
    Buscando el callsign del iGate en [aprs.fi](https://aprs.fi), el dispositivo aparecía en la ubicación programada, confirmando la conexión correcta con la red APRS-IS.  
 
 <p align="center">
-  <img src="Archivos/Imagenes/Mapa_iGate.png" alt="Mapa con iGate" width="800">
+  <img src="Archivos/Imagenes/Mapa_iGate.png" alt="Mapa con iGate" width="600">
 </p>
 
 **Figura 3:** Mapa de APRS.fi mostrando la ubicación del iGate.
@@ -362,7 +362,7 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
    Se observaron **raw packets** en la página de APRS.fi.  
 
 <p align="center">
-  <img src="Archivos/Imagenes/RawPackets.png" alt="Raw Packets APRS" width="800">
+  <img src="Archivos/Imagenes/RawPackets.png" alt="Raw Packets APRS" width="600">
 </p>
 
 **Figura 4:** Sección de *raw packets* en APRS.fi. Los raw packets son los mensajes APRS recibidos tal como llegaron, sin procesamiento. Esto confirma que el iGate está recibiendo y retransmitiendo correctamente los paquetes LoRa a APRS-IS.
