@@ -218,7 +218,7 @@ Bucle infinito:
 Fin del programa
 ```
 
-### 5.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
+### 5.2 Máquina de Estados (firmware interno en LILYGO)
 El diagrama de estados muestra la máquina de estados interna del firmware del iGate, describiendo cómo cambia el comportamiento del sistema según las condiciones de operación:
 
 <p align="center">
