@@ -42,7 +42,7 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 
 **Figura 2:** Diagrama de conexiones simplificado realizado por el grupo. Detalla los elementos clave:
 
-- **USB-C → PC:** Permite programar la placa y proveer alimentación mientras está conectada al computador.  
+- **USB-Micro USB → PC:** Permite programar la placa y proveer alimentación mientras está conectada al computador.  
 - **Antena LoRa → SX1276:** El módulo **SX1276** es el transceptor LoRa integrado en la placa. Se encarga de **transmitir y recibir paquetes de datos** en la frecuencia LoRa (433 MHz en nuestro caso). La antena se conecta a este módulo para mejorar la cobertura y la calidad de la señal.  
 - **OLED → I2C:** La pantalla OLED de 0.96” se comunica mediante **I2C**, mostrando información del iGate, como el número de paquetes recibidos o estado de conexión.  
 - **Batería → JST:** Conector para una batería Li-Po 3.7V que permite que el iGate funcione sin necesidad de estar conectado al USB.  
