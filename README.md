@@ -6,7 +6,7 @@ Un iGate (gateway de Internet) en APRS LoRa es una estación base que recibe se�
 Los iGates no necesitan GPS porque están en una ubicación fija y son esenciales para expandir el alcance y la utilidad de la red APRS-LoRa. Recopilan datos de rastreo (trackers) y los envían a la plataforma de Internet para su visualización.
 
 ## 2. Conceptos Importantes
-<details>
+
 - **iGate:**  
   Puente entre la red LoRa e Internet, que recibe y retransmite los datos. Requiere un receptor de radio LoRa (generalmente en la frecuencia de 433 MHz) y un computador o mini-computador para conectarse a la web.
 
@@ -27,11 +27,9 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 
 - **Placa de desarrollo:**  
   Módulo electrónico con un módem LoRa, configurable como iGate o tracker mediante firmware.
-  
-</details>
-  
+    
 ### 2.1 Conexiones de Hardware
-<details>
+
 <p align="center">
   <img src="Archivos/Imagenes/ConexionesHardware.jpg" alt="Diagrama general de buses" width="800">
 </p>
@@ -50,10 +48,9 @@ Los iGates no necesitan GPS porque están en una ubicación fija y son esenciale
 - **Batería → JST:** Conector para una batería Li-Po 3.7V que permite que el iGate funcione sin necesidad de estar conectado al USB.  
 
 > 💡 Nota: Todas estas conexiones son internas en la placa LilyGO T3 LoRa32, excepto la antena y la batería, que se conectan externamente. La correcta conexión garantiza que el iGate pueda recibir paquetes LoRa, mostrarlos en el OLED y enviarlos a APRS-IS.
-</details>
 
 ## 3. Diseño y Aplicación
-<details>
+
 Como aplicación para este sistema se pretende utilizar el LoRa iGate para el seguimiento en competiciones deportivas como por ejemplo carreras o ciclismo. Cada corredor, ciclista o atleta lleva un pequeño tracker LoRa APRS. En diferentes puntos estratégicos de la competencia se colocan iGates. Cada iGate recibe la señal LoRa y la reenvía automáticamente a la red APRS-IS a través de Internet. Los datos recopilados se pueden visualizar en plataformas como aprs.fi, o integrarse en un mapa personalizado del evento.
 
 El iGate se configurará mediante programación directa en la placa LilyGO T3 LoRa32, siguiendo un flujo planificado que garantice la recepción y transmisión correcta de los datos. La implementación se realizará en varias etapas:
@@ -83,9 +80,9 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
    - Repetir de manera indefinida los pasos anteriores, garantizando la disponibilidad del iGate como puente entre los trackers LoRa y la red de Internet.  
 
 > 💡 Nota: Este enfoque asegura un **control total del sistema**, sin depender de aplicaciones externas de configuración. Cada etapa está planificada para facilitar depuración, escalabilidad y mantenimiento del iGate.
-</details>
+
 ## 4. Lista de Hardware a utilizar
-<details>
+
 - T3 LoRa32 V1.6.1 – LILYGO®
 
 ## Requisitos adicionales
@@ -121,9 +118,9 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
 | **Antena**           | Conector SMA/IPEX para antena externa LoRa |
 | **Dimensiones**      | 25.6 x 51.2 mm aprox. |
 
-</details>
+
 ## 5. Diseño Planteado
-<details>
+
 Paso 1. Descargar e instalar ¨Visual Studio Code¨
 
 Paso 2. Descargar desde Github los parquetes de iGate.
@@ -252,14 +249,18 @@ void loop() {
 }
 ```
 </details>
+
 ## 6. Cronograma Preliminar
+
 <details>
+
 | Semana | Actividad / Objetivo | Avance Estimado |
 |--------|--------------------|----------------|
 | 5      | Configuración de entorno de programación y pruebas iniciales con la LilyGO T3. | ⚙️ En progreso |
 | 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ⚙️ En progreso |
 | 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ⚙️ En progreso |
 | 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ⚙️ En progreso |
+
 </details>
 
 
