@@ -672,6 +672,96 @@ void connectToAprsIs() {
   }
 }
 ```
+**Prueba sin GPS para ver si envia beacon**
+```
+#include <WiFi.h>
+#include <SPI.h>
+#include <LoRa.h>
+
+// ---------- CONFIGURACIÓN WiFi ----------
+const char* ssid     = "TU_WIFI";       // Tu red WiFi
+const char* password = "TU_PASSWORD";   // Contraseña WiFi
+
+// ---------- CONFIGURACIÓN APRS-IS ----------
+const char* aprsServer = "euro.aprs2.net";
+const int   aprsPort   = 14580;
+const char* callsign   = "TU_CALLSIGN"; // Tu indicativo APRS
+const char* passcode   = "TU_PASSCODE"; // Passcode generado en APRS
+
+WiFiClient client;
+
+// ---------- CONFIGURACIÓN LoRa ----------
+#define LORA_SS 18
+#define LORA_RST 14
+#define LORA_DIO0 26
+#define LORA_FREQUENCY 433775E3 // 433.775 MHz
+
+// Coordenadas fijas para el beacon
+const char* beaconLatitude  = "09 03.50N";
+const char* beaconLongitude = "079 02.45W";
+const char* beaconMessage   = "iGate Test Beacon";
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  // --- Conectar WiFi ---
+  WiFi.begin(ssid, password);
+  Serial.print("Conectando a WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado");
+
+  // --- Inicializar LoRa ---
+  LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
+  if (!LoRa.begin(LORA_FREQUENCY)) {
+    Serial.println("Error al inicializar LoRa");
+    while (1);
+  }
+  Serial.println("LoRa inicializado");
+
+  // --- Conectar a APRS-IS ---
+  if (client.connect(aprsServer, aprsPort)) {
+    Serial.println("Conectado a APRS-IS");
+    client.print("user "); client.print(callsign);
+    client.print(" pass "); client.print(passcode);
+    client.print(" vers ESP32_iGate 1.0\r\n");
+  } else {
+    Serial.println("Error de conexión a APRS-IS");
+  }
+}
+
+void loop() {
+  // ---------------- Recibir mensajes LoRa ----------------
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    String loraMsg = "";
+    while (LoRa.available()) loraMsg += (char)LoRa.read();
+    Serial.println("LoRa recibido: " + loraMsg);
+
+    if (client.connected()) {
+      // Enviar mensaje recibido a APRS-IS
+      String aprsMsg = String(callsign) + ">APRS,TCPIP*:" + loraMsg;
+      client.print(aprsMsg + "\r\n");
+      Serial.println("Reenviado a APRS-IS: " + aprsMsg);
+    }
+  }
+
+  // ---------------- Enviar beacon cada 30s ----------------
+  static unsigned long lastBeacon = 0;
+  if (millis() - lastBeacon > 30000 && client.connected()) {
+    String beacon = String(callsign) + ">APRS,TCPIP*:!" +
+                    beaconLatitude + "/" + beaconLongitude + "-" +
+                    beaconMessage;
+    client.print(beacon + "\r\n");
+    Serial.println("Beacon enviado: " + beacon);
+    lastBeacon = millis();
+  }
+}
+```
+
 
 
 ## 6. Cronograma Preliminar
