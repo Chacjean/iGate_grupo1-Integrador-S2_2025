@@ -323,6 +323,55 @@ El código anterior:
 ### 6.4 iGate LoRa APRS
 Este código inicializa un iGate LoRa APRS en un ESP32. Se conecta a WiFi, recibe paquetes LoRa y los reenvía a la red APRS-IS. Además, envía un beacon de prueba cada 30 segundos. La comunicación LoRa se hace mediante el módulo SX1276 conectado por SPI, y APRS-IS mediante la librería APRSIS.
 
+1. **Preparar los datos**:
+- **Datos de Configuración importantes**:
+```cpp
+// WiFi
+const char* ssid = "TU_WIFI";         // Aquí va el nombre de tu red WiFi
+const char* password = "TU_PASSWORD"; // Aquí la contraseña de tu WiFi
+
+// APRS-IS
+const char* callsign = "TU_CALLSIGN";      // Tu indicativo (ej. TI0IE1-10)
+const char* aprsPasscode = "TU_PASSCODE"; // Código que generaste en https://aprs.fi/passcode
+const char* aprsServer = "euro.aprs2.net";// Servidor APRS-IS a conectar
+const int aprsPort = 14580;                // Puerto del servidor APRS-IS
+```
+💡 Tip: Si no tienes passcode, ve a APRS Passcode Generator
+
+2. **Conectar el hardware**:
+- Conecta la LilyGO T3 LoRa32 al PC usando el USB-Micro.
+- Asegúrate de tener antena LoRa conectada, aunque sea solo para pruebas de recepción.
+- Si quieres, puedes usar la batería Li-Po para pruebas sin USB, pero no es obligatorio ahora.
+
+3. **Seleccionar placa y puerto en Arduino IDE**
+
+- Abre Arduino IDE.
+- Ve a Herramientas → Placa → ESP32 Arduino → LilyGO T3 LoRa32 (o ESP32 genérico si no aparece).
+- Ve a Herramientas → Puerto y selecciona el puerto USB donde está conectada la LilyGO.
+
+4. **Subir el código**
+- Haz clic en “Subir” (Upload) en Arduino IDE.
+- Espera a que compile y cargue.
+- Abre el Monitor Serial (Herramientas → Monitor Serial) a 115200 baudios para ver la salida en tiempo real.
+
+5. **Verificar funcionamiento**
+- En el Monitor Serial deberías ver algo como:
+
+```
+Iniciando iGate LoRa APRS...
+Conectando a WiFi...
+WiFi conectado!
+LoRa inicializado en 433.775 MHz
+Conectado a APRS-IS!
+Paquete recibido: TI0IE1>APRS,TCPIP*:... 
+Paquete reenviado a APRS-IS
+Beacon enviado a APRS-IS
+```
+Cada paquete LoRa que reciba la placa se imprimirá y se enviará a APRS-IS.
+Cada 30 segundos se envía un beacon de prueba automáticamente.
+
+**Código (C++)**
+
 ```cpp
 #include <SPI.h>        // Comunicación SPI con el módulo LoRa SX1276
 #include <LoRa.h>       // Control del transceptor LoRa
