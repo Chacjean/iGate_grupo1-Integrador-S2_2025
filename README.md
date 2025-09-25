@@ -164,6 +164,8 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
 ## 5. Diseño Planteado
 
 ### 5.1 Diagrama de Bloques
+El diagrama de bloques de flujo representa de manera simplificada la arquitectura funcional del iGate LoRa/APRS. Permite visualizar cómo interactúan los distintos componentes del sistema para recibir, procesar y reenviar datos APRS:
+
 <p align="center">
   <img src="Archivos/Imagenes/DiagramadeBloques.png" alt="Diagrama de Bloques" width="250">
 </p>
@@ -217,6 +219,7 @@ Fin del programa
 ```
 
 ### 5.2 Máquina de Estados-Máquina de Estados (firmware interno en LILYGO)
+El diagrama de estados muestra la máquina de estados interna del firmware del iGate, describiendo cómo cambia el comportamiento del sistema según las condiciones de operación:
 
 <p align="center">
   <img src="Archivos/Imagenes/DiagramadeEstados.png" alt="Máquina de Estados" width="500">
