@@ -103,6 +103,7 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
 
 ## Especificaciones de Hardware – LILYGO® T3 LoRa32 V1.6.1
 
+<p align="center">
 | Característica       | Especificación |
 |-----------------------|----------------|
 | **Microcontrolador** | ESP32 (Wi-Fi 802.11 b/g/n y Bluetooth 4.2 BR/EDR & BLE) |
@@ -117,7 +118,7 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
 | **Carga de batería** | Circuito de carga integrado para Li-Po |
 | **Antena**           | Conector SMA/IPEX para antena externa LoRa |
 | **Dimensiones**      | 25.6 x 51.2 mm aprox. |
-
+</p>
 
 ## 5. Diseño Planteado
 
