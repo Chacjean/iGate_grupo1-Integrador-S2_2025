@@ -121,11 +121,11 @@ El iGate se configurará mediante programación directa en la placa LilyGO T3 Lo
 
 ## 5. Diseño Planteado
 
-Paso 1. Descargar e instalar ¨Visual Studio Code¨
+Paso 1. **Descargar e instalar ¨Visual Studio Code¨**
 
-Paso 2. Descargar desde Github los parquetes de iGate.
+Paso 2. **Descargar desde Github los parquetes de iGate.**
 
-Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
+Paso 3. **Configurar el iGate en VS Code y cargar su placa vía USB:**
 
 -Identificar el tipo de tarjeta---"LILYGO"---Import(paquetes)---Upload
 -Conf.data
@@ -150,31 +150,31 @@ Paso 3. Configurar el iGate en VS Code y cargar su placa vía USB:
 1. Instalar Arduino IDE
 
 Para Linux (Ubuntu) seguir los siguientes pasos:
-- Descargar la última versión:
+- **Descargar la última versión:**
 
 ```bash
 mkdir -p ~/Documents/arduino
 cd ~/Documents/arduino
 wget https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.4_Linux_64bit.AppImage
 ```
-2. Dar permisos de ejecución
+2. **Dar permisos de ejecución**
 ```bash
 chmod +x arduino-ide_2.3.4_Linux_64bit.AppImage
 ```
-3. Instalar dependencias necesarias (Recomendado)
+3. **Instalar dependencias necesarias (Recomendado)**
 ```bash
 sudo apt update
 ssudo apt install libfuse2 libcanberra-gtk-module libcanberra-gtk3-module
 ```
-4. Ejecutar el IDE
+4. **Ejecutar el IDE**
 ```bash
 ./arduino-ide_2.3.4_Linux_64bit.AppImage
 ```
-5. Si hay problemas de SandBox, ejecutar:
+5. **Si hay problemas de SandBox, ejecutar:**
 ```bash
 ./arduino-ide_2.3.4_Linux_64bit.AppImage --no-sandbox
 ```
-6. Configuración del Arduino IDE para ESP32
+6. **Configuración del Arduino IDE para ESP32**
  - 6.1. Abrir Arduino IDE:
  - 6.2. Ir a Archivo → Preferencias.
  - 6.3. En Gestor de URLs adicionales de tarjetas, agregar (paquetes necesarios para el uso de ESP32):
@@ -182,19 +182,17 @@ ssudo apt install libfuse2 libcanberra-gtk-module libcanberra-gtk3-module
 ```bash
 https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 ```
-- 6.4 Clic en OK.
-- 6.5 Instalar soporte ESP32:
+- 6.4 **Clic en OK.**
+- 6.5 **Instalar soporte ESP32:**
     - 6.5.1 Ir a Herramientas → Placa → Gestor de placas…
     - Buscar ESP32 y hacer clic en Instalar en la versión estable. (Espressif Systems)
     - 6.5.2 Instalar librerías necesarias: En Arduino IDE: Programa → Incluir Librería → Gestionar Librerías…
     - Buscar e instalar: LoRa (para el módulo SX1276(Sandeep Mistry)), WiFi (ya viene incluida con ESP32),TinyGPS++ (si quieres simular GPS (Mikal Hart))
     
-7. Conectar la LilyGO
+7. **Conectar la LilyGO**
 - Conecta la placa vía USB-C.
 - Ir a Herramientas → Puerto y seleccionar el puerto correspondiente.
 - Ir a Herramientas → Placa → ESP32 Arduino → LilyGO T3 LoRa32 (o genérica ESP32 si no aparece).
-
-Configura tus credenciales WiFi en el código (SSID y Password).
 
 ## Programación
 
