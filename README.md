@@ -543,6 +543,135 @@ void loop() {
     lastBeacon = millis();
   }
 }
+```
+
+**TERCERA PRUEBA**
+
+```
+#include <WiFi.h>
+#include <SPI.h>
+#include <LoRa.h>
+
+// --- Configuración de la Red y APRS ---
+// Reemplaza los valores con tu configuración.
+const char* ssid = "TU_WIFI";
+const char* password = "TU_PASSWORD";
+
+const char* aprsServer = "euro.aprs2.net";
+const int aprsPort = 14580;
+const char* callsign = "TU_CALLSIGN";
+const char* passcode = "TU_PASSCODE"; // Genera tu passcode APRS en http://www.aprs-is.net/ask/portpasscode.aspx
+
+WiFiClient client;
+
+void setup() {
+  Serial.begin(115200);
+
+  Serial.println("Iniciando iGate LoRa a APRS...");
+
+  // --- Conexión WiFi ---
+  Serial.print("Conectando a WiFi: ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi conectado.");
+  Serial.print("Dirección IP: ");
+  Serial.println(WiFi.localIP());
+
+  // --- Inicialización de LoRa ---
+  LoRa.setPins(18, 14, 26);
+  if (!LoRa.begin(433775E3)) {
+    Serial.println("Error al inicializar LoRa. Verifica el cableado.");
+    while (1);
+  }
+  Serial.println("LoRa inicializado correctamente.");
+
+  // --- Conexión y Login a APRS-IS ---
+  connectToAprsIs();
+}
+
+void loop() {
+  // Manejo de la conexión: si se pierde, intenta reconectar.
+  if (!client.connected()) {
+    Serial.println("Conexión con APRS-IS perdida. Reintentando en 5 segundos...");
+    delay(5000);
+    connectToAprsIs();
+  }
+
+  // Leer y descartar los datos del servidor para mantener la conexión viva.
+  while (client.available()) {
+    client.read(); // Simplemente lee los bytes para mantener el flujo de datos.
+  }
+
+  // --- Recibir LoRa y reenviar a APRS ---
+  int packetSize = LoRa.parsePacket();
+  if (packetSize) {
+    String loraMsg = "";
+    while (LoRa.available()) {
+      loraMsg += (char)LoRa.read();
+    }
+    Serial.println("LoRa recibido: " + loraMsg);
+
+    // Solo reenvía si la conexión está activa.
+    if (client.connected()) {
+      // Formato del mensaje APRS
+      String aprsMsg = String(callsign) + ">APRS,TCPIP*:" + loraMsg;
+      client.print(aprsMsg + "\r\n");
+      Serial.println("Enviado a APRS-IS: " + aprsMsg);
+    }
+  }
+
+  // --- Enviar Beacon cada 30 segundos ---
+  static unsigned long lastBeacon = 0;
+  if (millis() - lastBeacon > 30000 && client.connected()) {
+    // La cadena del beacon debe ser un mensaje APRS válido.
+    String beacon = String(callsign) +
+                    ">APRS,TCPIP*:!0903.50N/07902.45W-Test iGate";
+    client.print(beacon + "\r\n");
+    Serial.println("Beacon enviado: " + beacon);
+    lastBeacon = millis();
+  }
+}
+
+// Función para conectar y loguear en el servidor APRS-IS.
+void connectToAprsIs() {
+  if (client.connect(aprsServer, aprsPort)) {
+    Serial.println("Conectado a APRS-IS.");
+    // Envía la línea de login.
+    client.print("user ");
+    client.print(callsign);
+    client.print(" pass ");
+    client.print(passcode);
+    client.print(" vers ESP32_iGate 1.0\r\n");
+    Serial.println("Login enviado. Esperando respuesta...");
+
+    // Espera un máximo de 5 segundos para leer la respuesta inicial del servidor.
+    unsigned long startTime = millis();
+    while (client.connected() && (millis() - startTime < 5000)) {
+      if (client.available()) {
+        String response = client.readStringUntil('\n');
+        Serial.print("Respuesta APRS-IS: ");
+        Serial.println(response);
+        // Si la respuesta no contiene un error, asumimos que el login fue exitoso.
+        if (response.indexOf("# logreq") == -1) {
+          Serial.println("Login exitoso.");
+          return;
+        }
+      }
+      delay(10);
+    }
+    
+    // Si llegamos aquí, hubo un problema.
+    Serial.println("No se recibió una respuesta válida o se perdió la conexión después del login.");
+    client.stop(); // Detener la conexión para un nuevo intento.
+  } else {
+    Serial.println("Error de conexión a APRS-IS.");
+  }
+}
+```
 
 
 ## 6. Cronograma Preliminar
