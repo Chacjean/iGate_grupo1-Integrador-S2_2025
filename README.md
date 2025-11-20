@@ -333,156 +333,343 @@ Cada 30 segundos se envía un beacon de prueba automáticamente.
 ```c++
 
 #include <WiFi.h>
+#include <WebServer.h>
+#include <Preferences.h>
 #include <SPI.h>
 #include <LoRa.h>
+#include "FS.h"
+#include "SPIFFS.h"
 
-// ---------- WiFi ----------
-const char* WIFI_SSID = "Dracarys";
-const char* WIFI_PASS = "Contraseña";
+// -------------------- STORAGE --------------------
+Preferences prefs;
 
-// ---------- APRS-IS ----------
-const char* APRS_SERVER = "euro.aprs2.net";
-const uint16_t APRS_PORT = 14580;
+// -------------------- SERVIDOR WEB --------------------
+WebServer server(80);
 
-// Usa MAYÚSCULAS y SSID -10 para iGate
-const char* CALLSIGN = "TI0IE1-10";
-const char* PASSCODE = "21203";
-// (Opcional) filtro APRS-IS; "" si no quieres
-const char* APRS_FILTER = "m/50";
+// -------------------- CONFIG --------------------
+String wifiSSID = "";
+String wifiPASS = "";
+String callSign = "";   // Ej: TI0IE1-10 (con SSID)
+String passCode = "";   // Passcode basado en TI0IE1 (sin SSID)
+String aprsServer = "";
+uint16_t aprsPort = 14580;
+String beaconLat = "";
+String beaconLon = "";
 
+// -------------------- APRS --------------------
 WiFiClient aprs;
 
-// ---------- LoRa (LilyGO T3 LoRa32 / SX1276) ----------
+// -------------------- LoRa --------------------
 #define LORA_SCK    5
-#define LORA_MISO  19
-#define LORA_MOSI  27
-#define LORA_SS    18
-#define LORA_RST   14
-#define LORA_DIO0  26
-const long LORA_FREQ = 433775000; // 433.775 MHz
+#define LORA_MISO   19
+#define LORA_MOSI   27
+#define LORA_SS     18
+#define LORA_RST    14
+#define LORA_DIO0   26
 
-// Parámetros típicos LoRa-APRS
-#define LORA_SF    12
-#define LORA_BW    125E3
-#define LORA_CR    5
-#define LORA_SYNC  0x12
-// #define USE_CRC  // descomenta si tu red usa CRC
+const long LORA_FREQ = 433775000;
+#define LORA_SF     12
+#define LORA_BW     125E3
+#define LORA_CR     5
+#define LORA_SYNC   0x12
 
 unsigned long lastBeacon = 0;
-const unsigned long BEACON_MS = 30000;
+unsigned long beaconInterval = 30000; // se puede ajustar por smartbeaconing
 
-// ---------- Utilidades ----------
-void ensureWiFi() {
-  if (WiFi.status() == WL_CONNECTED) return;
-  Serial.printf("Conectando a WiFi %s", WIFI_SSID);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  uint32_t t0 = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - t0 < 20000) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println(WiFi.status() == WL_CONNECTED ? " OK" : " FAIL");
+// -------------------- LOG DE PAQUETES --------------------
+unsigned long paquetesRecibidos = 0;
+unsigned long paquetesReenviados = 0;
+
+// -------------------- HTML --------------------
+const char* portalHTML = R"(
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Configuración iGate</title>
+<style>
+body { font-family: Arial; background:#f5f6f7; padding:20px; margin:0; }
+.container { background:white; max-width:500px; margin:auto; padding:25px; border-radius:12px; box-shadow:0 0 10px #0002; }
+label { display:block; margin-top:10px; }
+input { width:100%; padding:8px; margin-top:5px; border-radius:6px; border:1px solid #aaa; }
+button { width:100%; padding:12px; margin-top:20px; border:0; background:#0c3c78; color:white; font-size:16px; border-radius:10px; cursor:pointer; }
+button:hover { background:#10509e; }
+a { color:#0c3c78; }
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Configuración del iGate LoRa → APRS</h2>
+<form action="/save" method="POST">
+<label>SSID WiFi:</label><input name="ssid" required>
+<label>Contraseña WiFi:</label><input name="pass" required>
+<label>Callsign APRS (TI0IE1-10):</label><input name="callsign" required>
+<label>Passcode APRS-IS (para TI0IE1):</label><input name="passcode" required>
+<label>Servidor APRS:</label><input name="server" value="euro.aprs2.net">
+<label>Puerto APRS:</label><input name="port" type="number" value="14580">
+<label>Latitud (DDMM.mmN):</label><input name="lat" required>
+<label>Longitud (DDDMM.mmW):</label><input name="lon" required>
+<button>Guardar y Reiniciar</button>
+</form>
+<p><a href='/stats'>Ver Estadísticas</a></p>
+</div>
+</body>
+</html>
+)";
+
+// ----------------------------------------------------------
+// GUARDAR CONFIG
+// ----------------------------------------------------------
+void handleSave() {
+    wifiSSID = server.arg("ssid");
+    wifiPASS = server.arg("pass");
+    callSign = server.arg("callsign");
+    passCode = server.arg("passcode");
+    aprsServer = server.arg("server");
+    aprsPort = server.arg("port").toInt();
+    beaconLat = server.arg("lat");
+    beaconLon = server.arg("lon");
+
+    prefs.begin("igate", false);
+    prefs.putString("ssid", wifiSSID);
+    prefs.putString("pass", wifiPASS);
+    prefs.putString("callsign", callSign);
+    prefs.putString("passcode", passCode);
+    prefs.putString("server", aprsServer);
+    prefs.putUInt("port", aprsPort);
+    prefs.putString("lat", beaconLat);
+    prefs.putString("lon", beaconLon);
+    prefs.end();
+
+    server.send(200, "text/plain", "Guardado. Reiniciando...");
+    delay(1000);
+    ESP.restart();
 }
 
-bool ensureAPRS() {
-  if (aprs.connected()) return true;
-  Serial.printf("Conectando a APRS-IS %s:%u\n", APRS_SERVER, APRS_PORT);
-  if (!aprs.connect(APRS_SERVER, APRS_PORT)) {
-    Serial.println("Fallo de conexión APRS-IS");
-    return false;
-  }
-  // Login APRS-IS
-  String login = "user ";
-  login += CALLSIGN;
-  login += " pass ";
-  login += PASSCODE;
-  login += " vers ESP32_iGate 1.0";
-  if (APRS_FILTER[0] != '\0') {
-    login += " filter ";
-    login += APRS_FILTER;
-  }
-  login += "\r\n";
-  aprs.print(login);
-  Serial.print("Login enviado: "); Serial.print(login);
-  return true;
-}
+// ----------------------------------------------------------
+// PORTAL CAUTIVO
+// ----------------------------------------------------------
+void startPortal() {
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP("iGate_Config");
 
-void sendAprsLine(const String& line) {
-  if (!ensureAPRS()) return;
-  if (line.endsWith("\r\n")) aprs.print(line);
-  else aprs.print(line + "\r\n");
-}
+    Serial.println("Portal cautivo activo: conectarse a iGate_Config");
 
-void sendBeacon() {
-  // REEMPLAZA por tu lat/lon y símbolo APRS correctos
-  // Formato ejemplo: !DDMM.mmN/DDDMM.mmW-Comentario
-  String beacon = String(CALLSIGN) + ">APRS,TCPIP*:" +
-                  "!coordenadas-iGate LoRa CR";
-  sendAprsLine(beacon);
-  Serial.println("Beacon enviado: " + beacon);
-}
+    server.on("/", []() { server.send(200, "text/html", portalHTML); });
+    server.on("/save", HTTP_POST, handleSave);
 
-void setupLoRa() {
-  SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_SS);
-  LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
-  if (!LoRa.begin(LORA_FREQ)) {
-    Serial.println("Error LoRa.begin()");
-    while (true) delay(1000);
-  }
-  LoRa.setSpreadingFactor(LORA_SF);
-  LoRa.setSignalBandwidth(LORA_BW);
-  LoRa.setCodingRate4(LORA_CR);
-  LoRa.setSyncWord(LORA_SYNC);
-  #ifdef USE_CRC
-  LoRa.enableCrc();
-  #endif
-  Serial.println("LoRa listo en 433.775 MHz");
-}
+    server.on("/stats", []() {
+        String html = "<html><body>";
+        html += "<h2>Estadísticas LoRa iGate</h2>";
+        html += "<p>Paquetes recibidos (LoRa RX): " + String(paquetesRecibidos) + "</p>";
+        html += "<p>Paquetes reenviados a APRS-IS: " + String(paquetesReenviados) + "</p>";
+        float volt = analogRead(35) * (3.3 / 4095.0) * 2;
+        html += "<p>Voltaje: " + String(volt, 2) + " V</p>";
+        html += "<p>Temperatura interna: " + String(temperatureRead()) + " °C</p>";
+        html += "<p>Intervalo de beacon: " + String(beaconInterval / 1000) + " s</p>";
+        html += "<p><a href='/download'>Descargar CSV</a></p>";
+        html += "<p><a href='/'>Volver</a></p>";
+        html += "</body></html>";
+        server.send(200, "text/html", html);
+    });
 
-// ========= AQUÍ ESTÁN setup() Y loop() =========
-void setup() {
-  Serial.begin(115200);
-  delay(300);
-  Serial.println("\n[LoRa → APRS-IS iGate] arrancando...");
+    server.on("/download", []() {
+        if (SPIFFS.exists("/log.csv")) {
+            File f = SPIFFS.open("/log.csv", "r");
+            server.streamFile(f, "text/csv");
+            f.close();
+        } else {
+            server.send(404, "text/plain", "No hay archivo CSV");
+        }
+    });
 
-  ensureWiFi();
-  setupLoRa();
-  ensureAPRS();
+    server.begin();
+    Serial.println("Servidor web iniciado.");
 
-  if (aprs.connected()) sendBeacon();
-  lastBeacon = millis();
-}
-
-void loop() {
-  ensureWiFi();
-  ensureAPRS();
-
-  // LoRa → APRS-IS
-  int packetSize = LoRa.parsePacket();
-  if (packetSize) {
-    String loraMsg;
-    while (LoRa.available()) loraMsg += (char)LoRa.read();
-    loraMsg.trim();
-    Serial.println("LoRa recibido: " + loraMsg);
-
-    if (aprs.connected()) {
-      // Si ya viene como "CALL>APRS,..." reenvíalo tal cual.
-      // Si no, lo empaquetamos simple como mensaje APRS
-      String aprsMsg = String(CALLSIGN) + ">APRS,TCPIP*:" + loraMsg;
-      sendAprsLine(aprsMsg);
-      Serial.println("Enviado a APRS-IS: " + aprsMsg);
+    while (true) {
+        server.handleClient();
+        delay(10);
     }
-  }
+}
 
-  // Beacon cada 30 s
-  if (millis() - lastBeacon > BEACON_MS && aprs.connected()) {
-    sendBeacon();
+// ----------------------------------------------------------
+// LECTURA DE CONFIG
+// ----------------------------------------------------------
+bool loadConfig() {
+    prefs.begin("igate", true);
+    wifiSSID = prefs.getString("ssid", "");
+    wifiPASS = prefs.getString("pass", "");
+    callSign = prefs.getString("callsign", "");
+    passCode = prefs.getString("passcode", "");
+    aprsServer = prefs.getString("server", "");
+    aprsPort = prefs.getUInt("port", 14580);
+    beaconLat = prefs.getString("lat", "");
+    beaconLon = prefs.getString("lon", "");
+    prefs.end();
+
+    return wifiSSID != "" && callSign != "";
+}
+
+// ----------------------------------------------------------
+// CONEXIÓN A WiFi
+// ----------------------------------------------------------
+void ensureWiFi() {
+    if (WiFi.status() == WL_CONNECTED) return;
+
+    Serial.printf("Conectando a %s...\n", wifiSSID.c_str());
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(wifiSSID.c_str(), wifiPASS.c_str());
+
+    uint32_t t0 = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - t0 < 15000) {
+        Serial.print(".");
+        delay(400);
+    }
+
+    Serial.println(WiFi.status() == WL_CONNECTED ? "\nWiFi OK" : "\nWiFi FAIL");
+
+    if (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Error de WiFi - abriendo portal...");
+        startPortal();
+    }
+}
+
+// ----------------------------------------------------------
+// APRS LOGIN (con algo de debug)
+// ----------------------------------------------------------
+bool ensureAPRS() {
+    if (aprs.connected()) return true;
+
+    Serial.printf("Conectando APRS-IS %s:%u...\n", aprsServer.c_str(), aprsPort);
+    if (!aprs.connect(aprsServer.c_str(), aprsPort)) {
+        Serial.println("Error APRS-IS: no se pudo conectar.");
+        return false;
+    }
+
+    String login = "user " + callSign + " pass " + passCode + " vers ESP32_iGate 1.0\r\n";
+    aprs.print(login);
+    Serial.print("Login enviado: ");
+    Serial.println(login);
+
+    uint32_t t0 = millis();
+    while (aprs.connected() && !aprs.available() && millis() - t0 < 3000) delay(10);
+
+    while (aprs.available()) {
+        String line = aprs.readStringUntil('\n');
+        line.trim();
+        if (line.length() > 0) {
+            Serial.print("APRS-IS> ");
+            Serial.println(line);
+        }
+    }
+
+    return aprs.connected();
+}
+
+// ----------------------------------------------------------
+// REGISTRAR EN CSV
+// ----------------------------------------------------------
+void logCSV(String type, String msg) {
+    if (!SPIFFS.exists("/log.csv")) {
+        File f = SPIFFS.open("/log.csv", "w");
+        f.println("Tipo,Mensaje");
+        f.close();
+    }
+    File f = SPIFFS.open("/log.csv", "a");
+    f.println(type + "," + msg);
+    f.close();
+}
+
+// ----------------------------------------------------------
+// ENVÍO DE BEACON (con comentario solicitado)
+// ----------------------------------------------------------
+void sendBeacon() {
+    if (!aprs.connected()) {
+        Serial.println("APRS-IS no conectado, beacon NO enviado.");
+        return;
+    }
+
+    float volt = analogRead(35) * (3.3 / 4095.0) * 2.0;
+    float temp = temperatureRead();
+
+    String beacon = callSign + ">APRS,TCPIP*:" +
+                    "!" + beaconLat + "/" + beaconLon +
+                    "I" + 
+                    " Volt:" + String(volt, 2) +
+                    "V Temp:" + String(temp, 1) + 
+                    "C Escuela de Ingeniería Electrónica - ITCR - iGate G1";
+
+    aprs.println(beacon);
+    Serial.println("Beacon enviado: " + beacon);
+}
+
+// ----------------------------------------------------------
+// SETUP
+// ----------------------------------------------------------
+void setup() {
+    Serial.begin(115200);
+    delay(500);
+
+    if (!SPIFFS.begin(true)) {
+        Serial.println("Error SPIFFS");
+    }
+
+    if (!loadConfig()) {
+        Serial.println("Sin config → mostrar portal cautivo");
+        startPortal();
+    }
+
+    ensureWiFi();
+    ensureAPRS();
+
+    SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_SS);
+    LoRa.setPins(LORA_SS, LORA_RST, LORA_DIO0);
+    LoRa.begin(LORA_FREQ);
+    LoRa.setSpreadingFactor(LORA_SF);
+    LoRa.setSignalBandwidth(LORA_BW);
+    LoRa.setCodingRate4(LORA_CR);
+    LoRa.setSyncWord(LORA_SYNC);
+
     lastBeacon = millis();
-  }
+}
 
-  // (Opcional) lee respuesta del servidor
-  while (aprs.connected() && aprs.available()) Serial.write(aprs.read());
+// ----------------------------------------------------------
+// LOOP
+// ----------------------------------------------------------
+void loop() {
+    ensureWiFi();
+    if (!ensureAPRS()) {
+        delay(2000);
+        ensureAPRS();
+    }
+
+    int size = LoRa.parsePacket();
+    if (size) {
+        paquetesRecibidos++;
+        String msg;
+        while (LoRa.available()) msg += (char)LoRa.read();
+        msg.trim();
+
+        String out = callSign + ">APRS,TCPIP*:" + msg;
+        aprs.println(out);
+        paquetesReenviados++;
+        Serial.println("LoRa→APRS: " + out);
+
+        LoRa.beginPacket();
+        LoRa.print(msg);
+        LoRa.endPacket();
+        Serial.println("LoRa→LoRa: " + msg);
+
+        logCSV("RX", msg);
+    }
+
+    unsigned long interval = 30000;  // aquí podrías aplicar smartbeaconing si quieres
+    beaconInterval = interval;
+
+    if (millis() - lastBeacon > beaconInterval) {
+        sendBeacon();
+        lastBeacon = millis();
+    }
 }
 
 ```
