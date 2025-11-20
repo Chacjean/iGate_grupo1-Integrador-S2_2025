@@ -673,7 +673,7 @@ void loop() {
 }
 
 ```
-### 6.3 Pruebas Preliminares
+### 6.3 Pruebas
 
 Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguientes observaciones:
 
@@ -720,8 +720,23 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
   <img src="Archivos/Imagenes/PruebaBeacon.png" alt="Raw Packets APRS" width="600">
 </p>
 
+Además se logró el envio de beacons con la leyenda "Escuela de Ingeniería Electrónica - ITCR"
+
+<p align="center">
+  <img src="Archivos/Imagenes/beacon_ITCR.jpeg" alt="Raw Packets APRS" width="600">
+</p>
+
+6. **Portal**
+
+Se implementa un portal cautivo para la configuración del iGate
+
+<p align="center">
+  <img src="Archivos/Imagenes/portal.jpeg" alt="Raw Packets APRS" width="600">
+</p>
+
+
 **Resumen:**  
-Las pruebas preliminares confirman que el iGate recibe y retransmite paquetes LoRa a APRS-IS, visualizables en el mapa y en *raw packets*. Además, el envío de beacons personalizados funcionó como se esperaba, evidenciando la ubicación de prueba en Panamá según los datos programados en el firmware. Este resultado valida el correcto control de las tramas de beacon y permitirá continuar con la integración de nuevas funciones en futuras etapas.
+Las pruebas confirman que el iGate recibe y retransmite paquetes LoRa a APRS-IS, visualizables en el mapa y en *raw packets*. Además, el envío de beacons personalizados funcionó como se esperaba, evidenciando la ubicación de prueba en Panamá según los datos programados en el firmware. Este resultado valida el correcto control de las tramas de beacon y permitirá continuar con la integración de nuevas funciones en futuras etapas.
 
 
 ## 6. Cronograma Preliminar
@@ -732,8 +747,8 @@ Las pruebas preliminares confirman que el iGate recibe y retransmite paquetes Lo
 | 6      | Desarrollo inicial del código: <br> - Recepción de paquetes LoRa <br> - Conexión a WiFi <br> - Estructura básica para envío a APRS-IS | ✅ Completado |
 | 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ✅ Completado |
 | 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ✅ Completado |
-| 9-15   | Implementación y Evaluación Continua: <br> - Pruebas de recepción y transmisión de trackers <br> - Depuración y refinamiento del código <br> - Commits regulares y documentados en GitHub <br> - Visualización de datos en APRS.fi y aprsdirect.de | ⚙️ En progreso |
-| 16     | Defensa del Proyecto Final: <br> - Entrega de informe completo <br> - Presentación final <br> - Código final documentado y funcional <br> - Confirmación de publicación de datos en APRS | ⏳ Planeado |
+| 9-15   | Implementación y Evaluación Continua: <br> - Pruebas de recepción y transmisión de trackers <br> - Depuración y refinamiento del código <br> - Commits regulares y documentados en GitHub <br> - Visualización de datos en APRS.fi y aprsdirect.de | ✅ Completado |
+| 16     | Defensa del Proyecto Final: <br> - Entrega de informe completo <br> - Presentación final <br> - Código final documentado y funcional <br> - Confirmación de publicación de datos en APRS | ⚙️ En progreso |
 
 
 
