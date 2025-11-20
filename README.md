@@ -759,6 +759,7 @@ Se observa el beacon de manera correcta en APRS-IS y se comprueba el reenvío.
 <p align="center">
   <img src="Archivos/Imagenes/Aprs.fi.jpeg" alt="Raw Packets APRS" width="600">
 </p>
+
 **Figura 11:** Beacon en APRS.FI.
 
 
@@ -778,7 +779,10 @@ Se observa el beacon de manera correcta en APRS-IS y se comprueba el reenvío.
 | 7      | Integración hardware-software y pruebas de funcionamiento: <br> - Conectar antena LoRa <br> - Verificar envío de datos a APRS-IS <br> - Depurar errores iniciales | ✅ Completado |
 | 8      | **Entrega parcial (Informe y Presentación Parcial)**: <br> - Diagramas de bloques y máquina de estados <br> - Listado de hardware y justificación técnica <br> - Planteamiento estructurado del diseño <br> - Implementación en hardware y bus de conexión <br> - Tipo de comunicación de cada periférico <br> - Pseudo-código para control del sistema <br> - Definición de tramas de datos <br> - Cronograma y presupuesto para las semanas restantes <br> - Código inicial en GitHub documentado | ✅ Completado |
 | 9-15   | Implementación y Evaluación Continua: <br> - Pruebas de recepción y transmisión de trackers <br> - Depuración y refinamiento del código <br> - Commits regulares y documentados en GitHub <br> - Visualización de datos en APRS.fi y aprsdirect.de | ✅ Completado |
-| 16     | Defensa del Proyecto Final: <br> - Entrega de informe completo <br> - Presentación final <br> - Código final documentado y funcional <br> - Confirmación de publicación de datos en APRS | ⚙️ En progreso |
+| 16     | Defensa del Proyecto Final: <br> - Entrega de informe completo <br> - Presentación final <br> - Código final documentado y funcional <br> - Confirmación de publicación de datos en APRS | ✅ Completado |
 
+
+## 7. Documento de entrega final
+[iGate__Entrega_Final_G1.pdf](https://github.com/user-attachments/files/23657814/iGate__Entrega_Final_G1.pdf)
 
 
