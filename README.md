@@ -702,7 +702,10 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
   <img src="Archivos/Imagenes/Mapa_iGate.png" alt="Mapa con iGate" width="600">
 </p>
 
-**Figura 3:** Mapa de APRS.fi mostrando la ubicación del iGate.
+**Figura 3:** Mapa de APRS.fi mostrando la ubicación del iGate (versión anterior-entrega preliminar).
+
+<img width="1253" height="619" alt="image" src="https://github.com/user-attachments/assets/e08f9301-ca2d-49df-adcb-9ccee73c9731" />
+**Figura 4:** Mapa de APRS.fi mostrando la ubicación del iGate (versión actual-entrega final).
 
 4. **Recepción de Raw Packets**  
    Se observaron **raw packets** en la página de APRS.fi.  
@@ -711,7 +714,11 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
   <img src="Archivos/Imagenes/RawPackets.png" alt="Raw Packets APRS" width="600">
 </p>
 
-**Figura 4:** Sección de *raw packets* en APRS.fi. Los raw packets son los mensajes APRS recibidos tal como llegaron, sin procesamiento. Esto confirma que el iGate está recibiendo y retransmitiendo correctamente los paquetes LoRa a APRS-IS.
+**Figura 5:** Sección de *raw packets* en APRS.fi. Los raw packets son los mensajes APRS recibidos tal como llegaron, sin procesamiento. Esto confirma que el iGate está recibiendo y retransmitiendo correctamente los paquetes LoRa a APRS-IS (versión anterior-entrega preliminar).
+
+<img width="1060" height="578" alt="image" src="https://github.com/user-attachments/assets/ae0552ee-e9f6-4879-9969-cb9a583145f8" />
+
+**Figura 6:** Sección de *raw packets* en APRS.fi. Los raw packets son los mensajes APRS recibidos tal como llegaron, sin procesamiento. Esto confirma que el iGate está recibiendo y retransmitiendo correctamente los paquetes LoRa a APRS-IS (versión actual-entrega final).
 
 5. **Prueba de Beacons**  
    Al enviar beacons personalizados, el iGate transmitió correctamente las coordenadas fijas configuradas en el código, ignorando la posición obtenida por el GPS integrado. De esta forma, el beacon se publicó en APRS-IS mostrando las coordenadas predefinidas, las cuales corresponden a una ubicación de prueba en Panamá.  
@@ -719,12 +726,15 @@ Durante las primeras pruebas con el iGate LoRa/APRS, se realizaron las siguiente
 <p align="center">
   <img src="Archivos/Imagenes/PruebaBeacon.png" alt="Raw Packets APRS" width="600">
 </p>
+**Figura 7:** Transmisión coordenadas. Versión anterior-entrega preliminar.
 
-Además se logró el envio de beacons con la leyenda "Escuela de Ingeniería Electrónica - ITCR"
+<img width="1255" height="627" alt="image" src="https://github.com/user-attachments/assets/57bf9953-9d16-4ace-9f8d-ca170e24b6bb" />
+**Figura 8:** Transmisión coordenadas. Versión actual-entrega final.
 
-<p align="center">
-  <img src="Archivos/Imagenes/beacon_ITCR.jpeg" alt="Raw Packets APRS" width="600">
-</p>
+Además, como se muestra en la imagen anterior, se logró el envio de beacons con la leyenda "Escuela de Ingeniería Electrónica - ITCR - iGate G1"
+
+<img width="1077" height="135" alt="image" src="https://github.com/user-attachments/assets/16400237-e302-4ac3-949b-dc428c041c21" />
+**Figura 9:** Leyenda Beacon. Versión actual-entrega final.
 
 6. **Portal**
 
@@ -733,6 +743,7 @@ Se implementa un portal cautivo para la configuración del iGate
 <p align="center">
   <img src="Archivos/Imagenes/portal.jpeg" alt="Raw Packets APRS" width="600">
 </p>
+**Figura 10:** Portal cautivo.
 
 
 7. **APRS-IS**
@@ -742,11 +753,12 @@ Se observa el beacon de manera correcta en APRS-IS y se comprueba el reenvío.
 <p align="center">
   <img src="Archivos/Imagenes/Aprs.fi.jpeg" alt="Raw Packets APRS" width="600">
 </p>
+**Figura 11:** Beacon en APRS.FI.
 
 <p align="center">
   <img src="Archivos/Imagenes/Paquetes_transmitidos.jpeg" alt="Raw Packets APRS" width="600">
 </p>
-
+**Figura 12:** Beacon en APRS.FI.
 
 ## 6. Cronograma Preliminar
 
