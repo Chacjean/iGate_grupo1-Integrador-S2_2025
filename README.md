@@ -735,9 +735,6 @@ Se implementa un portal cautivo para la configuración del iGate
 </p>
 
 
-**Resumen:**  
-Las pruebas confirman que el iGate recibe y retransmite paquetes LoRa a APRS-IS, visualizables en el mapa y en *raw packets*. Además, el envío de beacons personalizados funcionó como se esperaba, evidenciando la ubicación de prueba en Panamá según los datos programados en el firmware. Este resultado valida el correcto control de las tramas de beacon y permitirá continuar con la integración de nuevas funciones en futuras etapas.
-
 7. **APRS-IS**
 
 Se observa el beacon de manera correcta en APRS-IS y se comprueba el reenvío.
@@ -747,7 +744,7 @@ Se observa el beacon de manera correcta en APRS-IS y se comprueba el reenvío.
 </p>
 
 <p align="center">
-  <img src="Archivos/Imagenes/paquetes_transmitidos.jpeg" alt="Raw Packets APRS" width="600">
+  <img src="Archivos/Imagenes/Paquetes_transmitidos.jpeg" alt="Raw Packets APRS" width="600">
 </p>
 
 
